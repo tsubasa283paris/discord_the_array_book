@@ -11,12 +11,14 @@ from source.player import Player, PlayerMaster
 
 ICON = ":book:"
 CAUT = ":exclamation:"
+MAX_CYCLES = 10
 COMMANDS = {
     "HLP": Command("!help", "今見ているこの画面を表示します。"),
     "SHOWPL": Command("!show_players", "ゲーム参加メンバーリストを表示します。"),
     "JOIN": Command("!join", "ゲーム参加メンバーリストに追加されます。"),
     "LEAVE": Command("!leave", "ゲーム参加メンバーリストから除外されます。"),
     "RESETMMB": Command("!reset_member", "ゲーム参加メンバーリストを全消去します。"),
+    "SETCYCLES": Command("!set_cycles", "何周するかを設定します。"),
     "START": Command("!start_game", "ゲームを開始します。"),
     "QUITGM": Command("!quit_game", "ゲームを強制終了します。"),
     "SETTITLE": Command("!set_title", "自分の小説のタイトルを設定します。"),
@@ -35,6 +37,7 @@ ALLOWED_COMMANDS_PER_PHASE = {
         "JOIN",
         "LEAVE",
         "RESETMMB",
+        "SETCYCLES",
         "START",
     ],
     PHASES["GT"]: [
@@ -53,11 +56,12 @@ ALWAYS_ALLOWED_COMMANDS = [
     "SHOWPL",
 ]
 
-class TCClient(discord.Client):
+class TABClient(discord.Client):
     allowed_commands_per_phase: dict # of str: str
     function_dictionary: dict # of str: function
     gamech_id: int
     phase: str
+    cycles: int
     members: list # of discord.Member
     playermaster: PlayerMaster
     script_page: int
@@ -131,6 +135,23 @@ class TCClient(discord.Client):
             ret_mes = f"{ICON} 参加メンバーをリセットしました。"
             yield None, ret_mes
     
+    def set_cycles(self, content: str, author: discord.Member) -> tuple:
+        ok = True
+        temp = 0
+        try:
+            temp = int(content)
+        except ValueError:
+            ok = False
+        ok &= temp <= MAX_CYCLES
+        if ok:
+            ret_mes = f"{ICON} 周回数が{temp}に設定されました。"
+            ret_mem = None
+        else:
+            ret_mes = f"{CAUT} 与えられた文字が数字として解釈できないか、"\
+                    + f"規定された最大値{MAX_CYCLES}を超えています。"
+            ret_mem = author.name
+        yield ret_mem, ret_mes
+
     def start_game(self, *_) -> tuple:
         # 共有情報
         ret_mes = f"{ICON} **ゲームを開始します！**\n" \
@@ -238,6 +259,7 @@ class TCClient(discord.Client):
             COMMANDS["JOIN"].get_command(): self.join,
             COMMANDS["LEAVE"].get_command(): self.leave,
             COMMANDS["RESETMMB"].get_command(): self.reset_member,
+            COMMANDS["SETCYCLES"].get_command(): self.set_cycles,
             COMMANDS["START"].get_command(): self.start_game,
             COMMANDS["QUITGM"].get_command(): self.quit_game,
             COMMANDS["SETTITLE"].get_command(): self.set_title,
@@ -247,6 +269,7 @@ class TCClient(discord.Client):
         }
 
         self.phase = PHASES["S"]
+        self.cycles = 1
     
     def load_channel(self, id: int) -> None:
         self.gamech_id = id
