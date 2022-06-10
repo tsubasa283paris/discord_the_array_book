@@ -52,7 +52,7 @@ ALLOWED_COMMANDS_PER_PHASE = {
     ],
 }
 ALWAYS_ALLOWED_COMMANDS = [
-    "HELP",
+    "HLP",
     "SHOWPL",
 ]
 
@@ -270,8 +270,10 @@ class TABClient(discord.Client):
 
         self.allowed_commands_per_phase = {}
         for p in PHASES.values():
-            self.allowed_commands_per_phase[p] = \
-                ALLOWED_COMMANDS_PER_PHASE[p] + ALWAYS_ALLOWED_COMMANDS
+            self.allowed_commands_per_phase[p] = []
+            for c in ALLOWED_COMMANDS_PER_PHASE[p] + ALWAYS_ALLOWED_COMMANDS:
+                self.allowed_commands_per_phase[p]\
+                                .append(COMMANDS[c].get_command())
 
         self.function_dictionary = {
             COMMANDS["HLP"].get_command(): self.help,
