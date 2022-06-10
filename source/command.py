@@ -10,7 +10,7 @@ class Command:
         self._help = help
     
     def get_command(self) -> str:
-        return self.command
+        return self._command
     
     def get_help(self) -> str:
-        return self.help
+        return self._help
