@@ -196,6 +196,7 @@ class TABClient(discord.Client):
             ret_mes = f"{ICON} 本文の執筆に入ります。\n" \
                     + "1ページ目を執筆中……"
             self.script_page = 0
+            self.phase = PHASES["GS"]
             yield None, ret_mes
 
             # 全員へ本文執筆の通知
@@ -224,6 +225,23 @@ class TABClient(discord.Client):
         if not self.playermaster.latest_scripts_are_set():
             ret_mes = f"{CAUT} 参加者全員の{self.script_page + 1}ページ目の本文の設定が完了していません！"
             yield author.name, ret_mes
+        elif self.script_page == self.cycles * self.playermaster.len_players() - 1:
+            # 最終ページが終了した場合
+            # 共有情報
+            ret_mes = f"{ICON} 全員の本が完成しました！参加者全員の個人チャットに完成した本を送付しました。"
+            self.phase = PHASES["S"]
+            yield None, ret_mes
+
+            # 全員へ完成した本文を送付
+            for p in self.playermaster.get_players():
+                book = self.playermaster.get_book(p.get_name())
+                ret_mes = f"{ICON} 「{book[0]}」\n"
+                for i in range(len(book) - 1):
+                    ret_mes += f"{i + 1}.\n" \
+                            + "```\n" \
+                            + f"{book[i + 1]}\n" \
+                            + "```"
+                yield p.get_name(), ret_mes
         else:
             # 共有情報
             ret_mes = f"{self.script_page + 1}ページ目を執筆中……"

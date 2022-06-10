@@ -42,7 +42,9 @@ class Player:
 
     def latest_script_is_set(self) -> bool:
         return self._book.get_scripts()[-1] is not None
-
+    
+    def get_book(self) -> Book:
+        return self._book
 
 class PlayerMaster:
     _players: list # of Player
@@ -91,7 +93,7 @@ class PlayerMaster:
         random.shuffle(self._rand_indexes)
         for i in range(len(self._players)):
             p_name = self._players[i].get_name()
-            self._name_index_map[p_name] = self._rand_indexes[i]
+            self._name_index_map[p_name] = i
             self._players[i].add_book_page()
     
     def get_target_book_title(self, player_name: str) -> str:
@@ -124,11 +126,35 @@ class PlayerMaster:
         self._players[target_book_index].set_book_script(script, page)
     
     def turn_page(self) -> None:
-        for p in self._players:
-            p.add_book_page()
+        for i in range(len(self._players)):
+            p_name = self._players[i].get_name()
+            next_i = find_next(self._rand_indexes,
+                                self._name_index_map[p_name])
+            self._name_index_map[p_name] = self._rand_indexes[next_i]
+            self._players[i].add_book_page()
     
     def titles_are_set(self) -> bool:
         return all(p.title_is_set() for p in self._players)
 
     def latest_scripts_are_set(self) -> bool:
         return all(p.latest_script_is_set() for p in self._players)
+
+    def get_book(self, player_name: str) -> list:
+        found = False
+        for p in self._players:
+            if p.get_name() == player_name:
+                found = True
+                book = p.get_book()
+                return [book.get_title()] + book.get_scripts()
+        if not found:
+            raise UnknownPlayerError()
+
+def find_next(l: list, v: any) -> int:
+    key_i = -1
+    for i in range(len(l)):
+        if l[i] == v:
+            key_i = i
+            break
+    if key_i < 0:
+        raise ValueError()
+    return (key_i + 1) % len(l)

@@ -38,6 +38,3 @@ class Book:
     
     def get_scripts(self) -> list:
         return self._scripts
-
-    def get_book(self) -> str:
-        return "\n".join([self._title] + self._scripts)
