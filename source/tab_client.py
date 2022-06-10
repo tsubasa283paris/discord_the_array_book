@@ -77,6 +77,8 @@ class TABClient(discord.Client):
         sep = message.content.split(" ")
         author = message.author
 
+        print(f" {sep[0]} by {author.name}")
+
         try:
             if sep[0] in self.allowed_commands_per_phase[self.phase]:
                 gen = self.function_dictionary[sep[0]]\
@@ -288,6 +290,8 @@ class TABClient(discord.Client):
 
         self.phase = PHASES["S"]
         self.cycles = 1
+
+        print("initialization ok")
     
     def load_channel(self, id: int) -> None:
         self.gamech_id = id
