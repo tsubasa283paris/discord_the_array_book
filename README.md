@@ -14,3 +14,18 @@
    ```bash
    pipenv install
    ```
+
+4. Create a file `.env`  
+   1. Create with blank
+      ```bash
+      echo -e 'DISCO_TOKEN=\nDISCO_CHID=' > .env
+      ```
+
+   2. Open it and set each value  
+      ```
+      DISCO_TOKEN=***
+      DISCO_CHID=***
+      ```
+
+      - `DISCO_TOKEN`: The bot token you can retrieve from your Application > Bot > Build-A-Bot
+      - `DISCO_CHID`: The text channel ID (numeric) where you want this app to post global messages
