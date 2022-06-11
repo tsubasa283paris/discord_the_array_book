@@ -17,7 +17,7 @@ COMMANDS = {
     "SHOWPL": Command("!show_players", "ゲーム参加メンバーリストを表示します。"),
     "JOIN": Command("!join", "ゲーム参加メンバーリストに追加されます。"),
     "LEAVE": Command("!leave", "ゲーム参加メンバーリストから除外されます。"),
-    "RESETMMB": Command("!reset_member", "ゲーム参加メンバーリストを全消去します。"),
+    "RESETMMB": Command("!reset_players", "ゲーム参加メンバーリストを全消去します。"),
     "SETCYCLES": Command("!set_cycles", "何周するかを設定します。"),
     "START": Command("!start_game", "ゲームを開始します。"),
     "QUITGM": Command("!quit_game", "ゲームを強制終了します。"),
@@ -133,7 +133,7 @@ class TABClient(discord.Client):
             ret_mes = f"{ICON} {author.name}の参加を取り消しました。"
             yield None, ret_mes
     
-    def reset_member(self, *_) -> tuple:
+    def reset_players(self, *_) -> tuple:
         ret_mes = f"{ICON} 参加メンバーをリセットしました。"
         self.playermaster.remove_all()
         yield None, ret_mes
@@ -296,7 +296,7 @@ class TABClient(discord.Client):
             COMMANDS["SHOWPL"].get_command(): self.show_players,
             COMMANDS["JOIN"].get_command(): self.join,
             COMMANDS["LEAVE"].get_command(): self.leave,
-            COMMANDS["RESETMMB"].get_command(): self.reset_member,
+            COMMANDS["RESETMMB"].get_command(): self.reset_players,
             COMMANDS["SETCYCLES"].get_command(): self.set_cycles,
             COMMANDS["START"].get_command(): self.start_game,
             COMMANDS["QUITGM"].get_command(): self.quit_game,
