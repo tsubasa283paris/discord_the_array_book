@@ -77,8 +77,6 @@ class TABClient(discord.Client):
         sep = message.content.split(" ")
         author = message.author
 
-        print(f" {sep[0]} by {author.name}")
-
         try:
             if sep[0] in self.allowed_commands_per_phase[self.phase]:
                 gen = self.function_dictionary[sep[0]]\

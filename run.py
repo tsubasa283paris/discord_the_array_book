@@ -1,10 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import discord
+
 import settings
 from source.tab_client import TABClient
 
-tcclient = TABClient()
+intents = discord.Intents.default()
+intents.members = True
+intents.typing = False
+intents.presences = False
+tcclient = TABClient(intents=intents)
 
 token = settings.TOKEN
 channelID = settings.CHID
