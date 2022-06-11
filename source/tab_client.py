@@ -144,6 +144,7 @@ class TABClient(discord.Client):
             ok = False
         ok &= temp <= MAX_CYCLES
         if ok:
+            self.cycles = temp
             ret_mes = f"{ICON} 周回数が{temp}に設定されました。"
             ret_mem = None
         else:
