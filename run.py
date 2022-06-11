@@ -18,5 +18,5 @@ channelID = settings.CHID
 if token == "" or channelID == "":
     raise ValueError(".env not set properly")
 
-tcclient.load_channel(channelID)
+tcclient.load_channel(int(channelID))
 tcclient.run(token)
