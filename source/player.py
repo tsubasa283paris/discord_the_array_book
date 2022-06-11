@@ -54,6 +54,7 @@ class PlayerMaster:
     def __init__(self):
         self._players = []
         self._rand_indexes = []
+        self._name_index_map = {}
 
     def add_player(self, player_name: str) -> bool:
         ok = True
