@@ -93,6 +93,7 @@ class PlayerMaster:
         self._rand_indexes = list(range(len(self._players)))
         random.shuffle(self._rand_indexes)
         for i in range(len(self._players)):
+            self._players[i].reset_book()
             p_name = self._players[i].get_name()
             self._name_index_map[p_name] = i
             self._players[i].add_book_page()
