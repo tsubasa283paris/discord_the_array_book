@@ -126,6 +126,7 @@ class PlayerMaster:
         if target_book_index is None:
             raise UnknownPlayerError()
         self._players[target_book_index].set_book_script(script, page)
+        return self.latest_scripts_are_set()
     
     def turn_page(self) -> None:
         for i in range(len(self._players)):
