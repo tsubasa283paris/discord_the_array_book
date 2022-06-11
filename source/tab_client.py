@@ -2,12 +2,12 @@
 # -*- coding: utf-8 -*-
 
 import asyncio
-import random
 
 import discord
 
 from source.command import Command
-from source.player import Player, PlayerMaster
+from source.book import LineBreakForbiddenError
+from source.player import Player, PlayerMaster, UnknownPlayerError
 
 ICON = ":book:"
 CAUT = ":exclamation:"
@@ -181,7 +181,12 @@ class TABClient(discord.Client):
     
     def set_title(self, content: str, author: discord.Member) -> tuple:
         ret_mes = f"{ICON} タイトルの変更を受け付けました！"
-        all_set = self.playermaster.set_book_title(author.name, content)
+        try:
+            all_set = self.playermaster.set_book_title(author.name, content)
+        except LineBreakForbiddenError:
+            ret_mes = f"{CAUT} 改行を入れないでください！"
+        except UnknownPlayerError:
+            ret_mes = f"{CAUT} ゲームに参加していません！"
         yield author.name, ret_mes
 
         if all_set:
@@ -214,8 +219,11 @@ class TABClient(discord.Client):
     def set_script(self, content: str, author: discord.Member) -> tuple:
         ret_mes = f"{ICON} {self.script_page + 1}ページ目の変更を受け付けました！" \
                 + f"送信されたページの文字数は{len(content)}文字です。"
-        all_set = self.playermaster.set_book_script\
+        try:
+            all_set = self.playermaster.set_book_script\
                                     (author.name, content, self.script_page)
+        except UnknownPlayerError:
+            ret_mes = f"{CAUT} ゲームに参加していません！"
         yield author.name, ret_mes
 
         if all_set:

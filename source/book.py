@@ -24,8 +24,6 @@ class Book:
         self._scripts.append(None)
     
     def set_script(self, script: str, page: int) -> None:
-        if "\n" in script:
-            raise LineBreakForbiddenError()
         if page > len(self._scripts):
             raise InvalidPageError()
         elif page == len(self._scripts):

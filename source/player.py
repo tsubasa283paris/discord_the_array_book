@@ -104,13 +104,14 @@ class PlayerMaster:
         return self._players[target_book_index].get_book_title()
     
     def set_book_title(self, player_name: str, title: str) -> bool:
-        found = False
-        for p in self._players:
-            if p.get_name() == player_name:
-                found = True
-                p.set_book_title(title)
-        if not found:
+        tgt_i = -1
+        for i in range(len(self._players)):
+            if self._players[i].get_name() == player_name:
+                tgt_i = i
+                break
+        if tgt_i < 0:
             raise UnknownPlayerError()
+        self._players[tgt_i].set_book_title(title)
         return self.titles_are_set()
     
     def get_target_last_script(self, player_name: str) -> str:
