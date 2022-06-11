@@ -261,8 +261,8 @@ class TABClient(discord.Client):
                 yield p.get_name(), ret_mes
         else:
             # 共有情報
-            ret_mes = f"{self.script_page + 1}ページ目を執筆中……"
             self.script_page += 1
+            ret_mes = f"{self.script_page + 1}ページ目を執筆中……"
             self.script_all_set_notified = False
             self.playermaster.turn_page()
             yield None, ret_mes
@@ -274,7 +274,7 @@ class TABClient(discord.Client):
                 target_last_script = self.playermaster.get_target_last_script\
                                                             (p.get_name())
                 ret_mes = f"{ICON} 本「{target_book_title}」の{self.script_page + 1}ページ目を書き込んでください。\n" \
-                        + f"{self.script_page + 1}ページ目の内容は以下の通りでした。\n" \
+                        + f"{self.script_page}ページ目の内容は以下の通りでした。\n" \
                         + "```\n" \
                         + f"{target_last_script}\n" \
                         + "```"
