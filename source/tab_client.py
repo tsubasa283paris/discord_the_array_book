@@ -131,9 +131,8 @@ class TABClient(discord.Client):
             yield None, ret_mes
     
     def reset_member(self, *_) -> tuple:
-        if self.playermaster.remove_all():
-            ret_mes = f"{ICON} 参加メンバーをリセットしました。"
-            yield None, ret_mes
+        ret_mes = f"{ICON} 参加メンバーをリセットしました。"
+        yield None, ret_mes
     
     def set_cycles(self, content: str, author: discord.Member) -> tuple:
         ok = True
