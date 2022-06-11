@@ -66,6 +66,9 @@ class TABClient(discord.Client):
     playermaster: PlayerMaster
     script_page: int
 
+    title_all_set_notified: bool
+    script_all_set_notified: bool
+
     async def on_ready(self) -> None:
         print("------------")
         print("Logged in as")
@@ -163,6 +166,8 @@ class TABClient(discord.Client):
             ret_mes += f"- {p.get_name()}\n"
         self.playermaster.setup()
         self.phase = PHASES["GT"]
+        self.title_all_set_notified = False
+        self.script_all_set_notified = False
         yield None, ret_mes
 
         # 全員へタイトル設定の通知
@@ -190,8 +195,9 @@ class TABClient(discord.Client):
             ret_mes = f"{CAUT} ゲームに参加していません！"
         yield author.name, ret_mes
 
-        if all_set:
+        if all_set and not self.title_all_set_notified:
             ret_mes = f"{ICON} 参加者全員からのタイトルの設定を受け付けました！"
+            self.title_all_set_notified = True
             yield None, ret_mes
     
     def start_script(self, _, author: discord.Member) -> tuple:
@@ -228,8 +234,9 @@ class TABClient(discord.Client):
             ret_mes = f"{CAUT} ゲームに参加していません！"
         yield author.name, ret_mes
 
-        if all_set:
+        if all_set and not self.script_all_set_notified:
             ret_mes = f"{ICON} 参加者全員からの{self.script_page + 1}ページ目の本文を受け付けました！"
+            self.script_all_set_notified = True
             yield None, ret_mes
     
     def next_turn(self, _, author: discord.Member) -> tuple:
@@ -257,6 +264,7 @@ class TABClient(discord.Client):
             # 共有情報
             ret_mes = f"{self.script_page + 1}ページ目を執筆中……"
             self.script_page += 1
+            self.script_all_set_notified = False
             self.playermaster.turn_page()
             yield None, ret_mes
 
