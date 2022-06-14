@@ -19,6 +19,7 @@ COMMANDS = {
     "LEAVE": Command("!leave", "ゲーム参加メンバーリストから除外されます。"),
     "RESETMMB": Command("!reset_players", "ゲーム参加メンバーリストを全消去します。"),
     "SETCYCLES": Command("!set_cycles", "何周するかを設定します。"),
+    "SETCH": Command("!set_channel", "全体公開メッセージを投稿するチャンネルIDを設定します。"),
     "START": Command("!start_game", "ゲームを開始します。"),
     "QUITGM": Command("!quit_game", "ゲームを強制終了します。"),
     "SETTITLE": Command("!set_title", "自分の小説のタイトルを設定します。"),
@@ -38,6 +39,7 @@ ALLOWED_COMMANDS_PER_PHASE = {
         "LEAVE",
         "RESETMMB",
         "SETCYCLES",
+        "SETCH",
         "START",
     ],
     PHASES["GT"]: [
@@ -153,6 +155,22 @@ class TABClient(discord.Client):
         else:
             ret_mes = f"{CAUT} 与えられた文字が数字として解釈できないか、"\
                     + f"規定された最大値{MAX_CYCLES}を超えています。"
+            ret_mem = author.name
+        yield ret_mem, ret_mes
+    
+    def set_channel(self, content: str, author: discord.Member) -> tuple:
+        ok = True
+        temp = self.gamech_id
+        try:
+            temp = int(content)
+        except ValueError:
+            ok = False
+        if ok:
+            self.gamech_id = temp
+            ret_mes = f"{ICON} 全体公開メッセージ送信チャンネルが当チャンネルに設定されました。"
+            ret_mem = None
+        else:
+            ret_mes = f"{CAUT} 与えられた文字が数字として解釈できません。"
             ret_mem = author.name
         yield ret_mem, ret_mes
 
@@ -298,6 +316,7 @@ class TABClient(discord.Client):
             COMMANDS["LEAVE"].get_command(): self.leave,
             COMMANDS["RESETMMB"].get_command(): self.reset_players,
             COMMANDS["SETCYCLES"].get_command(): self.set_cycles,
+            COMMANDS["SETCH"].get_command(): self.set_channel,
             COMMANDS["START"].get_command(): self.start_game,
             COMMANDS["QUITGM"].get_command(): self.quit_game,
             COMMANDS["SETTITLE"].get_command(): self.set_title,
