@@ -147,14 +147,14 @@ class TABClient(discord.Client):
             temp = int(content)
         except ValueError:
             ok = False
-        ok &= temp <= MAX_CYCLES
+        ok &= 0 < temp <= MAX_CYCLES
         if ok:
             self.cycles = temp
             ret_mes = f"{ICON} 周回数が{temp}に設定されました。"
             ret_mem = None
         else:
             ret_mes = f"{CAUT} 与えられた文字が数字として解釈できないか、"\
-                    + f"規定された最大値{MAX_CYCLES}を超えています。"
+                    + f"規定された範囲 1 ≦ n ＜ {MAX_CYCLES}を超えています。"
             ret_mem = author.name
         yield ret_mem, ret_mes
     
