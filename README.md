@@ -1,5 +1,7 @@
 # the array book
 
+`python run.py`
+
 ## installation
 
 1. Setup pipenv
@@ -29,3 +31,20 @@
 
       - `DISCO_TOKEN`: The bot token you can retrieve from your Application > Bot > Build-A-Bot
       - `DISCO_CHID`: The text channel ID (numeric) where you want this app to post global messages
+
+5. (optional) In case you want to enable the feature to automatically save md files into your Google Drive, follow the official document:  
+   <https://developers.google.com/identity/protocols/oauth2/web-server#creatingcred>  
+   And then copy `client_secret.json` into the root directory of this repository.  
+   The JSON file must be formed like:  
+   ```json
+   {
+      "web": {
+         "client_id": "xxx.com",
+         "project_id": "foobar",
+         "auth_uri": "someurl",
+         "token_uri": "someurl",
+         "auth_provider_x509_cert_url": "someurl",
+         "client_secret": "v3RySeCRet-STR1ng"
+      }
+   }
+   ```
