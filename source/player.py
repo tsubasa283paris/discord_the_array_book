@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import datetime
+import os
 import random
 
 from source.book import Book
@@ -152,6 +154,19 @@ class PlayerMaster:
                 return [book.get_title()] + book.get_scripts()
         if not found:
             raise UnknownPlayerError()
+    
+    def save_books(self) -> None:
+        ts = datetime.datetime.now().strftime("%Y%m%d_%H%M")
+        savedir = os.path.join("storage", ts)
+        os.makedirs(savedir, exist_ok=True)
+        for i, p in enumerate(self._players):
+            ind_list = cycle_until(self._rand_indexes[::-1], i)
+            pln_list = [self._players[i].get_name() for i in ind_list]
+            book = p.get_book()
+            book_md = book.generate_markdown(pln_list)
+            book_md_fn = f"{i + 1}_{book.get_title()}.md"
+            with open(os.path.join(savedir, book_md_fn), "w") as f:
+                f.write(book_md)
 
 def find_next(l: list, v: any) -> int:
     key_i = -1
@@ -162,3 +177,13 @@ def find_next(l: list, v: any) -> int:
     if key_i < 0:
         raise ValueError()
     return (key_i + 1) % len(l)
+
+def cycle_until(l: list, v: any) -> list:
+    key_i = -1
+    for i in range(len(l)):
+        if l[i] == v:
+            key_i = i
+            break
+    if key_i < 0:
+        raise ValueError()
+    return l[key_i:] + l[:key_i]

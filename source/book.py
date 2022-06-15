@@ -36,3 +36,23 @@ class Book:
     
     def get_scripts(self) -> list:
         return self._scripts
+    
+    def generate_markdown(self, pln_list: list) -> str:
+        """
+        pln_list: プレイヤー名のリスト。記述順に入っている（先頭がオーナー）
+        """
+        ret_str = ""
+        ret_str += f"# 「{self._title}」\n"
+        ret_str += f"作：{pln_list[0]}\n\n"
+
+        for i in range(len(self._scripts)):
+            ret_str += f"## {i + 1} ({pln_list[i % len(pln_list)]})\n\n"
+            lines = self._scripts[i].splitlines()
+            for j in range(len(lines)):
+                if len(lines[j]) == 0:
+                    ret_str += "\n"
+                else:
+                    ret_str += lines[j] + "  \n"
+            ret_str += "\n"
+
+        return ret_str
