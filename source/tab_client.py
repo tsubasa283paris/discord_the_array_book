@@ -20,6 +20,7 @@ COMMANDS = {
     "RESETMMB": Command("!reset_players", "ゲーム参加メンバーリストを全消去します。"),
     "SETCYCLES": Command("!set_cycles", "何周するかを設定します。"),
     "SETCH": Command("!set_channel", "全体公開メッセージを投稿するチャンネルIDを設定します。"),
+    "RELOADMMB": Command("!reload_member", "当botから見えるアカウント一覧を再読み込みします。"),
     "START": Command("!start_game", "ゲームを開始します。"),
     "QUITGM": Command("!quit_game", "ゲームを強制終了します。"),
     "SETTITLE": Command("!set_title", "自分の小説のタイトルを設定します。"),
@@ -40,6 +41,7 @@ ALLOWED_COMMANDS_PER_PHASE = {
         "RESETMMB",
         "SETCYCLES",
         "SETCH",
+        "RELOADMMB",
         "START",
     ],
     PHASES["GT"]: [
@@ -173,6 +175,11 @@ class TABClient(discord.Client):
             ret_mes = f"{CAUT} 与えられた文字が数字として解釈できません。"
             ret_mem = author.name
         yield ret_mem, ret_mes
+
+    def reload_member(self, _, author: discord.Member) -> tuple:
+        ret_mes = f"{ICON} 参加しているサーバからアカウント一覧を読み込み直しました。"
+        self.members = [member for member in self.get_all_members()]
+        yield author.name, ret_mes
 
     def start_game(self, *_) -> tuple:
         # 共有情報
@@ -317,6 +324,7 @@ class TABClient(discord.Client):
             COMMANDS["RESETMMB"].get_command(): self.reset_players,
             COMMANDS["SETCYCLES"].get_command(): self.set_cycles,
             COMMANDS["SETCH"].get_command(): self.set_channel,
+            COMMANDS["RELOADMMB"].get_command(): self.reload_member,
             COMMANDS["START"].get_command(): self.start_game,
             COMMANDS["QUITGM"].get_command(): self.quit_game,
             COMMANDS["SETTITLE"].get_command(): self.set_title,
