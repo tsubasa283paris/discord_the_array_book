@@ -155,18 +155,22 @@ class PlayerMaster:
         if not found:
             raise UnknownPlayerError()
     
-    def save_books(self) -> None:
+    def save_books(self) -> list:
         ts = datetime.datetime.now().strftime("%Y%m%d_%H%M")
         savedir = os.path.join("storage", ts)
         os.makedirs(savedir, exist_ok=True)
+        path_list = []
         for i, p in enumerate(self._players):
             ind_list = cycle_until(self._rand_indexes[::-1], i)
             pln_list = [self._players[i].get_name() for i in ind_list]
             book = p.get_book()
             book_md = book.generate_markdown(pln_list)
-            book_md_fn = f"{i + 1}_{book.get_title()}.md"
-            with open(os.path.join(savedir, book_md_fn), "w") as f:
+            book_md_path = os.path.join(savedir,
+                                        f"{i + 1}_{book.get_title()}.md")
+            with open(book_md_path, "w") as f:
                 f.write(book_md)
+            path_list.append(book_md_path)
+        return path_list
 
 def find_next(l: list, v: any) -> int:
     key_i = -1
