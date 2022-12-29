@@ -10,11 +10,11 @@ ICONS_B = {
     "CAUT": ":exclamation:",
 }
 COMMANDS_B = {
-    "HLP": Command("!!help", "今見ているこの画面を表示します。"),
-    "HLPG": Command("!!help_game", "各ゲームの概要を説明します。"),
-    "LNCG": Command("!!launch_game", "ゲームを起動します。現在起動中のゲームの情報は破棄されます。"),
-    "SETCH": Command("!!set_channel", "全体公開メッセージを投稿するチャンネルIDを設定します。"),
-    "RELOADMMB": Command("!!reload_member", "当botから見えるアカウント一覧を再読み込みします。"),
+    "HLP": Command("!help", "今見ているこの画面を表示します。"),
+    "HLPG": Command("!help_game", "各ゲームの概要を説明します。"),
+    "LNCG": Command("!launch_game", "ゲームを起動します。現在起動中のゲームの情報は破棄されます。"),
+    "SETCH": Command("!set_channel", "全体公開メッセージを投稿するチャンネルIDを設定します。"),
+    "RELOADMMB": Command("!reload_member", "当botから見えるアカウント一覧を再読み込みします。"),
 }
 ALWAYS_ALLOWED_COMMANDS_B = [
     "HLP",

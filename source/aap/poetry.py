@@ -38,15 +38,17 @@ class Poetry:
         columns = [[]]
             
         c = 0
+        p_i = 0
         j = 0
         c_j = 0
         for i in range(len(self._letters)):
             columns[c].append(self._letters[i])
             j += 1
             c_j += 1
-            if j >= self._pattern[c]:
+            if j >= self._pattern[p_i]:
                 columns.append([])
                 c += 1
+                p_i += 1
                 j = 0
                 c_j = 0
             elif c_j >= self._max_letters_per_column:

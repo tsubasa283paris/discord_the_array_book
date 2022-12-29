@@ -26,14 +26,14 @@ ICONS_A = {
     "CAUT": ":exclamation:",
 }
 COMMANDS_A = {
-    "SHOWPL": Command("!!show_players", "ゲーム参加メンバーリストを表示します。"),
-    "JOIN": Command("!!join", "ゲーム参加メンバーリストに追加されます。"),
-    "LEAVE": Command("!!leave", "ゲーム参加メンバーリストから除外されます。"),
-    "RESETMMB": Command("!!reset_players", "ゲーム参加メンバーリストを全消去します。"),
-    "SETPAT": Command("!!set_pattern", "文字数の型を設定します。"),
-    "START": Command("!!start_game", "ゲームを開始します。"),
-    "QUITGM": Command("!!quit_game", "ゲームを強制終了します。"),
-    "SETLET": Command("!!set_letter", "文字を入力します。"),
+    "SHOWPL": Command("!show_players", "ゲーム参加メンバーリストを表示します。"),
+    "JOIN": Command("!join", "ゲーム参加メンバーリストに追加されます。"),
+    "LEAVE": Command("!leave", "ゲーム参加メンバーリストから除外されます。"),
+    "RESETMMB": Command("!reset_players", "ゲーム参加メンバーリストを全消去します。"),
+    "SETPAT": Command("!set_pattern", "文字数の型を設定します。"),
+    "START": Command("!start_game", "ゲームを開始します。"),
+    "QUITGM": Command("!quit_game", "ゲームを強制終了します。"),
+    "SETLET": Command("!set_letter", "文字を入力します。"),
 }
 PHASES = {
     "S": "standby",
