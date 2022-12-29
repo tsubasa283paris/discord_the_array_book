@@ -16,17 +16,17 @@ ICONS_T = {
     "CAUT": ":exclamation:",
 }
 COMMANDS_T = {
-    "SHOWPL": Command("!show_players", "ゲーム参加メンバーリストを表示します。"),
-    "JOIN": Command("!join", "ゲーム参加メンバーリストに追加されます。"),
-    "LEAVE": Command("!leave", "ゲーム参加メンバーリストから除外されます。"),
-    "RESETMMB": Command("!reset_players", "ゲーム参加メンバーリストを全消去します。"),
-    "SETCYCLES": Command("!set_cycles", "何周するかを設定します。"),
-    "START": Command("!start_game", "ゲームを開始します。"),
-    "QUITGM": Command("!quit_game", "ゲームを強制終了します。"),
-    "SETTITLE": Command("!set_title", "自分の小説のタイトルを設定します。"),
-    "STARTSCRPT": Command("!start_script", "タイトル設定を確定して本文の執筆フェーズに入ります。"),
-    "SETSCRPT": Command("!set_script", "そのターンの本文執筆内容を設定します。すでに設定済みの場合上書きされます。"),
-    "NEXT": Command("!next_turn", "そのターンの本文を確定して、次のターンに移ります。"),
+    "SHOWPL": Command("!!show_players", "ゲーム参加メンバーリストを表示します。"),
+    "JOIN": Command("!!join", "ゲーム参加メンバーリストに追加されます。"),
+    "LEAVE": Command("!!leave", "ゲーム参加メンバーリストから除外されます。"),
+    "RESETMMB": Command("!!reset_players", "ゲーム参加メンバーリストを全消去します。"),
+    "SETCYCLES": Command("!!set_cycles", "何周するかを設定します。"),
+    "START": Command("!!start_game", "ゲームを開始します。"),
+    "QUITGM": Command("!!quit_game", "ゲームを強制終了します。"),
+    "SETTITLE": Command("!!set_title", "自分の小説のタイトルを設定します。"),
+    "STARTSCRPT": Command("!!start_script", "タイトル設定を確定して本文の執筆フェーズに入ります。"),
+    "SETSCRPT": Command("!!set_script", "そのターンの本文執筆内容を設定します。すでに設定済みの場合上書きされます。"),
+    "NEXT": Command("!!next_turn", "そのターンの本文を確定して、次のターンに移ります。"),
 }
 PHASES = {
     "S": "standby",

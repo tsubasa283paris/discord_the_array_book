@@ -10,11 +10,11 @@ ICONS_B = {
     "CAUT": ":exclamation:",
 }
 COMMANDS_B = {
-    "HLP": Command("!help", "今見ているこの画面を表示します。"),
-    "HLPG": Command("!help_game", "各ゲームの概要を説明します。"),
-    "LNCG": Command("!launch_game", "ゲームを起動します。現在起動中のゲームの情報は破棄されます。"),
-    "SETCH": Command("!set_channel", "全体公開メッセージを投稿するチャンネルIDを設定します。"),
-    "RELOADMMB": Command("!reload_member", "当botから見えるアカウント一覧を再読み込みします。"),
+    "HLP": Command("!!help", "今見ているこの画面を表示します。"),
+    "HLPG": Command("!!help_game", "各ゲームの概要を説明します。"),
+    "LNCG": Command("!!launch_game", "ゲームを起動します。現在起動中のゲームの情報は破棄されます。"),
+    "SETCH": Command("!!set_channel", "全体公開メッセージを投稿するチャンネルIDを設定します。"),
+    "RELOADMMB": Command("!!reload_member", "当botから見えるアカウント一覧を再読み込みします。"),
 }
 ALWAYS_ALLOWED_COMMANDS_B = [
     "HLP",
@@ -86,6 +86,11 @@ class GameController:
             ret_mes = "__**TAB**__\n" \
                     + "直前の人の書いたページしか読めないリレー小説です。\n" \
                     + "設定によりますが、多くの場合1ゲームに2時間以上かかります。"
+        elif temp == 2:
+            # aap
+            ret_mes = "__**AAP**__\n" \
+                    + "各プレイヤーが1文字ずつ追加して詩を作成するゲームです。\n" \
+                    + "設定によりますが、多くの場合1ゲームは30分ほどで終わります。"
         return ((author.name, ret_mes),)
     
     def launch_game(self, content: str, author: discord.Member) -> tuple:
@@ -105,6 +110,12 @@ class GameController:
             ret_mem = None
             switch_id = 1
             ret_mes = f"{ICONS_B['MAIN']} ゲームをTABに設定しました。\n" \
+                    + "これまで進行していたゲームは破棄されます。"
+        elif temp == 2:
+            # aap
+            ret_mem = None
+            switch_id = 2
+            ret_mes = f"{ICONS_B['MAIN']} ゲームをAAPに設定しました。\n" \
                     + "これまで進行していたゲームは破棄されます。"
         return ((ret_mem, ret_mes),), switch_id
     

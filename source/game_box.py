@@ -5,6 +5,7 @@ import discord
 
 from source.game_controller import GameController
 from source.tab.tab_controller import TABController
+from source.aap.aap_controller import AAPController
 
 class GameBox(discord.Client):
     gamech_id: int
@@ -26,6 +27,9 @@ class GameBox(discord.Client):
             if switch_id == 1:
                 # tab
                 self.gc = TABController()
+            elif switch_id == 2:
+                # aap
+                self.gc = AAPController()
             self.gc.initialize(self.get_all_members, self.gamech_id)
     
     async def send_message(self, name: str or None, message: str or discord.File)\
