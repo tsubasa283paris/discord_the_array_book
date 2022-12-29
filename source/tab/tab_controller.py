@@ -6,7 +6,7 @@ import os
 import discord
 
 from source.command import Command
-from source.game_controller import GameController, COMMANDS_B
+from source.game_controller import GameController, COMMANDS_B, ALWAYS_ALLOWED_COMMANDS_B
 from source.tab.book import LineBreakForbiddenError
 from source.tab.player import PlayerMaster, UnknownPlayerError
 
@@ -28,7 +28,6 @@ COMMANDS_T = {
     "SETSCRPT": Command("!set_script", "そのターンの本文執筆内容を設定します。すでに設定済みの場合上書きされます。"),
     "NEXT": Command("!next_turn", "そのターンの本文を確定して、次のターンに移ります。"),
 }
-COMMAND_LIST = [c.get_command() for c in COMMANDS_T.values()]
 PHASES = {
     "S": "standby",
     "GT": "game_title",
@@ -40,6 +39,7 @@ ALLOWED_COMMANDS_PER_PHASE = {
         "LEAVE",
         "RESETMMB",
         "SETCYCLES",
+        "LNCG",
         "SETCH",
         "RELOADMMB",
         "START",
@@ -55,10 +55,10 @@ ALLOWED_COMMANDS_PER_PHASE = {
         "NEXT",
     ],
 }
-ALWAYS_ALLOWED_COMMANDS = [
-    "HLP",
+ALWAYS_ALLOWED_COMMANDS_T = [
     "SHOWPL",
 ]
+ALWAYS_ALLOWED_COMMANDS_T += ALWAYS_ALLOWED_COMMANDS_B
 
 class TABController(GameController):
     allowed_commands_per_phase: dict # of str: str
@@ -86,7 +86,7 @@ class TABController(GameController):
         self.allowed_commands_per_phase = {}
         for p in PHASES.values():
             self.allowed_commands_per_phase[p] = []
-            for c in ALLOWED_COMMANDS_PER_PHASE[p] + ALWAYS_ALLOWED_COMMANDS:
+            for c in ALLOWED_COMMANDS_PER_PHASE[p] + ALWAYS_ALLOWED_COMMANDS_T:
                 self.allowed_commands_per_phase[p]\
                                 .append(self.commands_dictionary[c].get_command())
 

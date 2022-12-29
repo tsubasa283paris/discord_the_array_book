@@ -16,6 +16,10 @@ COMMANDS_B = {
     "SETCH": Command("!set_channel", "全体公開メッセージを投稿するチャンネルIDを設定します。"),
     "RELOADMMB": Command("!reload_member", "当botから見えるアカウント一覧を再読み込みします。"),
 }
+ALWAYS_ALLOWED_COMMANDS_B = [
+    "HLP",
+    "HLPG",
+]
 
 class GameController:
     commands_dictionary: dict # of str: Command
