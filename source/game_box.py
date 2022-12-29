@@ -4,7 +4,7 @@
 import discord
 
 from source.game_controller import GameController
-from source.tab_controller import TABController
+from source.tab.tab_controller import TABController
 
 class GameBox(discord.Client):
     gamech_id: int

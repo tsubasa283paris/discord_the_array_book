@@ -5,7 +5,7 @@ import datetime
 import os
 import random
 
-from source.book import Book
+from source.tab.book import Book
 
 class UnknownPlayerError(Exception):
     pass

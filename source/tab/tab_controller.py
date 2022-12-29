@@ -5,10 +5,10 @@ import os
 
 import discord
 
-from source.book import LineBreakForbiddenError
 from source.command import Command
 from source.game_controller import GameController, COMMANDS_B
-from source.player import PlayerMaster, UnknownPlayerError
+from source.tab.book import LineBreakForbiddenError
+from source.tab.player import PlayerMaster, UnknownPlayerError
 
 MAX_CYCLES = 10
 ICONS_T = {
