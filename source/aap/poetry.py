@@ -64,7 +64,7 @@ class Poetry:
                     row.append("　")
                 else:
                     if columns[j][i] is None:
-                        row.append("○")
+                        row.append("◯")
                     else:
                         row.append(columns[j][i])
             ret_str += " ".join(row) + "\n"

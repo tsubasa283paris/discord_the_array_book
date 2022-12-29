@@ -176,7 +176,7 @@ class AAPController(GameController):
 
         # 全員へ操作方法の通知
         cmd = self.commands_dictionary["SETLET"].get_command()
-        ret_mes = f"{ICONS_A['MAIN']} `{cmd}` のあとに一文字打ち込み、表示される○の位置の文字を設定してください。\n" \
+        ret_mes = f"{ICONS_A['MAIN']} `{cmd}` のあとに一文字打ち込み、表示される◯の位置の文字を設定してください。\n" \
                 + "ゲームマスターが次のターンに移行するまでは何度でも上書きできます。"
         for p in self.playermaster.get_players():
             ret.append((p.get_name(), ret_mes))
