@@ -20,7 +20,7 @@ ALLOWED_LETTERS = "0123456789" \
                 + "ばびぶべぼぱぴぷぺぽぁぃぅぇぉゃゅょゎ" \
                 + "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホ" \
                 + "マミムメモヤユヨラリルレロワヲンガギグゲゴザジズゼゾダヂヅデド" \
-                + "バビブベボパピプペポァィゥェォヵャュョヮ" 
+                + "バビブベボパピプペポァィゥェォヵャュョヮー"
 ICONS_A = {
     "MAIN": ":book:",
     "CAUT": ":exclamation:",
@@ -198,6 +198,8 @@ class AAPController(GameController):
             ret_mes = f"{ICONS_A['CAUT']} 無効な文字です！"
             return ((author.name, ret_mes),)
         letter = mojimoji.han_to_zen(content)
+        if letter == "ー":
+            letter = "｜"
         ret_mes = f"{ICONS_A['MAIN']} {self.poetry_index + 1}文字目の変更を受け付けました！"
         all_set = False
         try:
