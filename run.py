@@ -4,13 +4,13 @@
 import discord
 
 import settings
-from source.tab_client import TABClient
+from source.game_box import GameBox
 
 intents = discord.Intents.default()
 intents.members = True
 intents.typing = False
 intents.presences = False
-tcclient = TABClient(intents=intents)
+gamebox = GameBox(intents=intents)
 
 token = settings.TOKEN
 channelID = settings.CHID
@@ -18,5 +18,5 @@ channelID = settings.CHID
 if token == "" or channelID == "":
     raise ValueError(".env not set properly")
 
-tcclient.load_channel(int(channelID))
-tcclient.run(token)
+gamebox.load_channel(int(channelID))
+gamebox.run(token)
