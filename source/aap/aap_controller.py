@@ -6,7 +6,6 @@ import mojimoji
 
 from source.command import Command
 from source.game_controller import GameController, COMMANDS_B, ALWAYS_ALLOWED_COMMANDS_B
-from source.tab.book import LineBreakForbiddenError
 from source.aap.player import PlayerMaster, UnknownPlayerError
 
 DEFAULT_PATTERN = [5, 7, 5]
@@ -35,7 +34,6 @@ COMMANDS_A = {
     "START": Command("!!start_game", "ゲームを開始します。"),
     "QUITGM": Command("!!quit_game", "ゲームを強制終了します。"),
     "SETLET": Command("!!set_letter", "文字を入力します。"),
-    "NEXT": Command("!!next_turn", "そのターンの文字入力を確定して、次のターンに移ります。"),
 }
 PHASES = {
     "S": "standby",
@@ -55,7 +53,6 @@ ALLOWED_COMMANDS_PER_PHASE_A = {
     PHASES["G"]: [
         "QUITGM",
         "SETLET",
-        "NEXT",
     ],
 }
 ALWAYS_ALLOWED_COMMANDS_A = [
@@ -73,8 +70,6 @@ class AAPController(GameController):
     members: list # of discord.Member
     playermaster: PlayerMaster
     poetry_index: int
-
-    letter_all_set_notified: bool
 
     def initialize(self, get_all_members, gamech_id: int):
         self.get_all_members = get_all_members
@@ -106,7 +101,6 @@ class AAPController(GameController):
             self.commands_dictionary["START"].get_command(): self.start_game,
             self.commands_dictionary["QUITGM"].get_command(): self.quit_game,
             self.commands_dictionary["SETLET"].get_command(): self.set_letter,
-            self.commands_dictionary["NEXT"].get_command(): self.next_turn,
         }
 
         self.phase = PHASES["S"]
@@ -178,7 +172,6 @@ class AAPController(GameController):
         self.playermaster.setup()
         self.phase = PHASES["G"]
         self.poetry_index = 0
-        self.letter_all_set_notified = False
         ret.append((None, ret_mes))
 
         # 全員へ操作方法の通知
@@ -214,51 +207,37 @@ class AAPController(GameController):
             ret_mes = f"{ICONS_A['CAUT']} ゲームに参加していません！"
         ret.append((author.name, ret_mes))
 
-        if all_set and not self.letter_all_set_notified:
-            ret_mes = f"{ICONS_A['MAIN']} 参加者全員からの{self.poetry_index + 1}文字目の変更を受け付けました！"
-            self.letter_all_set_notified = True
-            ret.append((None, ret_mes))
+        if all_set:
+            # 全員がi文字目を設定した段階で次のターンに移る
+            if self.poetry_index == sum(self.pattern) - 1:
+                # 最終文字が終了した場合
+
+                # 全員へ完成した本文を送付する
+                players = self.playermaster.get_players()
+                for p in players:
+                    ret_mes = f"{ICONS_A['MAIN']} あなたの送り出した詩が完成しました！\n" \
+                            + "```\n" \
+                            + f"{p.get_displayable_poetry()}\n" \
+                            + "```"
+                    ret.append((p.get_name(), ret_mes))
+
+                # 共有情報
+                ret_mes = f"{ICONS_A['MAIN']} 全員の詩が完成しました！参加者全員の個人チャットに完成した詩を送付しました。"
+                self.phase = PHASES["S"]
+                ret.append((None, ret_mes))
+            else:
+                # 共有情報
+                self.poetry_index += 1
+                ret_mes = f"{self.poetry_index + 1}文字目を執筆中……"
+                self.playermaster.next_letter()
+                ret.append((None, ret_mes))
+
+                # 全員へ本文執筆の通知
+                for p in self.playermaster.get_players():
+                    ret_mes = f"{ICONS_A['MAIN']} あなたの前のターンの詩の内容は以下の通りでした。\n" \
+                            + "```\n" \
+                            + f"{self.playermaster.get_target_poetry(p.get_name())}\n" \
+                            + "```"
+                    ret.append((p.get_name(), ret_mes))
         
         return ret
-    
-    def next_turn(self, _, author: discord.Member) -> tuple:
-        if not self.playermaster.latest_letters_are_set():
-            ret_mes = f"{ICONS_A['CAUT']} 参加者全員の{self.poetry_index + 1}文字目の設定が完了していません！"
-            return ((author.name, ret_mes),)
-        elif self.poetry_index == sum(self.pattern) - 1:
-            # 最終文字が終了した場合
-            ret = []
-
-            # 全員へ完成した本文を送付する
-            players = self.playermaster.get_players()
-            for p in players:
-                ret_mes = f"{ICONS_A['MAIN']} あなたの送り出した詩が完成しました！\n" \
-                        + "```\n" \
-                        + f"{p.get_displayable_poetry()}\n" \
-                        + "```"
-                ret.append((p.get_name(), ret_mes))
-
-            # 共有情報
-            ret_mes = f"{ICONS_A['MAIN']} 全員の詩が完成しました！参加者全員の個人チャットに完成した詩を送付しました。"
-            self.phase = PHASES["S"]
-            ret.append((None, ret_mes))
-
-            return ret
-        else:
-            # 共有情報
-            ret = []
-            self.poetry_index += 1
-            ret_mes = f"{self.poetry_index + 1}文字目を執筆中……"
-            self.letter_all_set_notified = False
-            self.playermaster.next_letter()
-            ret.append((None, ret_mes))
-
-            # 全員へ本文執筆の通知
-            for p in self.playermaster.get_players():
-                ret_mes = f"{ICONS_A['MAIN']} あなたの前のターンの詩の内容は以下の通りでした。\n" \
-                        + "```\n" \
-                        + f"{p.get_displayable_poetry()}\n" \
-                        + "```"
-                ret.append((p.get_name(), ret_mes))
-            
-            return ret
