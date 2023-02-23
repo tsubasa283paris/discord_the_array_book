@@ -6,7 +6,7 @@ import discord
 
 from source.command import Command
 from source.game_controller import GameController, OnMessageResponse, COMMANDS_B, ALWAYS_ALLOWED_COMMANDS_B
-from source.ntn.player import PlayerMaster, UnknownPlayerError
+from source.ntn.player import PlayerMaster
 from source.ntn.script import Script
 
 ICONS_N = {
@@ -69,7 +69,8 @@ class NTNController(GameController):
         super().__init__()
         self.script = Script(lo_path)
 
-    def initialize(self, _, gamech_id: int):
+    def initialize(self, get_all_members: Callable, gamech_id: int):
+        self.get_all_members = get_all_members
         self.gamech_id = gamech_id
         self.members = [member for member in self.get_all_members()]
         self.playermaster = PlayerMaster()
