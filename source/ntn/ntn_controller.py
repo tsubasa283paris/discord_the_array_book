@@ -148,7 +148,7 @@ class NTNController(GameController):
                 ret_mes = f"{ICONS_N['CAUT']} 数字を指定してください！"
                 return OnMessageResponse([(author.name, ret_mes)])
 
-            if script_id > self.script.num_layout or script_id <= 0:
+            if script_id > self.script.num_layout or script_id < 0:
                 ret_mes = f"{ICONS_N['CAUT']} 無効なIDです！\n" \
                         + f"指定可能な最大のIDは{self.script.num_layout - 1}です。"
                 return OnMessageResponse([(author.name, ret_mes)])

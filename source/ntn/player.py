@@ -15,6 +15,9 @@ class Player:
         self._name = name
         self._valid_ids = []
     
+    def reset_ids(self) -> None:
+        self._valid_ids = []
+    
     def get_name(self) -> str:
         return self._name
 
@@ -72,6 +75,8 @@ class PlayerMaster:
     def setup(self, num_blanks: int) -> None:
         rand_indexes = list(range(num_blanks))
         random.shuffle(rand_indexes)
+        for i in range(len(self._player_list)):
+            self._player_list[i].reset_ids()
         for i in range(num_blanks):
             self._player_list[i % len(self._player_list)]\
                 .add_valid_id(rand_indexes.pop())
