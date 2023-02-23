@@ -30,7 +30,8 @@ class Script:
         if lo_path is None:
             lo_path = DEFAULT_SCRIPT_LAYOUT
         
-        self._lo_list: List[dict] = json.loads(lo_path)["layout_list"]
+        with open(lo_path, "r") as f:
+            self._lo_list: List[dict] = json.loads(f.read())["layout_list"]
         self.num_layout = len(self._lo_list)
     
     def set_layout(self, i: Union[int, None]) -> None:
