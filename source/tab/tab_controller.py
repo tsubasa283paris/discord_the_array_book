@@ -6,7 +6,7 @@ import os
 import discord
 
 from source.command import Command
-from source.game_controller import GameController, COMMANDS_B, ALWAYS_ALLOWED_COMMANDS_B
+from source.game_controller import GameController, OnMessageResponse, COMMANDS_B, ALWAYS_ALLOWED_COMMANDS_B
 from source.tab.book import LineBreakForbiddenError
 from source.tab.player import PlayerMaster, UnknownPlayerError
 
@@ -112,7 +112,7 @@ class TABController(GameController):
 
         print("initialization ok")
         
-    def help(self, _, author: discord.Member) -> tuple:
+    def help(self, _, author: discord.Member) -> OnMessageResponse:
         help_str = "\n".join([
             f"{com.get_command()}: {com.get_help()}"\
                                     for com in self.commands_dictionary.values()
@@ -121,32 +121,32 @@ class TABController(GameController):
                 + "```\n" \
                 + help_str + "\n" \
                 + "```"
-        return ((author.name, ret_mes),)
+        return OnMessageResponse([(author.name, ret_mes)])
     
-    def show_players(self, _, author: discord.Member) -> tuple:
+    def show_players(self, _, author: discord.Member) -> OnMessageResponse:
         ret_mes = "```\n" \
                 + "ID: 名前\n" \
                 + "==========\n" \
                 + self.playermaster.display_players() + "\n" \
                 + "```"
-        return ((author.name, ret_mes),)
+        return OnMessageResponse([(author.name, ret_mes)])
     
-    def join(self, _, author: discord.Member) -> tuple:
+    def join(self, _, author: discord.Member) -> OnMessageResponse:
         if self.playermaster.add_player(author.name):
             ret_mes = f"{ICONS_T['MAIN']} {author.name}の参加を承りました。"
-            return ((None, ret_mes),)
+            return OnMessageResponse([(None, ret_mes)])
     
-    def leave(self, _, author: discord.Member) -> tuple:
+    def leave(self, _, author: discord.Member) -> OnMessageResponse:
         if self.playermaster.remove_player(author.name):
             ret_mes = f"{ICONS_T['MAIN']} {author.name}の参加を取り消しました。"
-            return ((None, ret_mes),)
+            return OnMessageResponse([(None, ret_mes)])
     
-    def reset_players(self, *_) -> tuple:
+    def reset_players(self, *_) -> OnMessageResponse:
         ret_mes = f"{ICONS_T['MAIN']} 参加メンバーをリセットしました。"
         self.playermaster.remove_all()
-        return ((None, ret_mes),)
+        return OnMessageResponse([(None, ret_mes)])
     
-    def set_cycles(self, content: str, author: discord.Member) -> tuple:
+    def set_cycles(self, content: str, author: discord.Member) -> OnMessageResponse:
         ok = True
         temp = 0
         try:
@@ -162,9 +162,9 @@ class TABController(GameController):
             ret_mes = f"{ICONS_T['CAUT']} 与えられた文字が数字として解釈できないか、"\
                     + f"規定された範囲 1 ≦ n ＜ {MAX_CYCLES}を超えています。"
             ret_mem = author.name
-        return ((ret_mem, ret_mes),)
+        return OnMessageResponse([(ret_mem, ret_mes)])
 
-    def start_game(self, *_) -> tuple:
+    def start_game(self, *_) -> OnMessageResponse:
         ret = []
         # 共有情報
         ret_mes = f"{ICONS_T['MAIN']} **ゲームを開始します！**\n" \
@@ -187,15 +187,15 @@ class TABController(GameController):
         for p in self.playermaster.get_players():
             ret.append((p.get_name(), ret_mes))
         
-        return ret
+        return OnMessageResponse(ret)
     
-    def quit_game(self, *_) -> tuple:
+    def quit_game(self, *_) -> OnMessageResponse:
         ret_mes = f"{ICONS_T['MAIN']} ゲームが強制終了されました。\n" \
                 + "（参加メンバーは保存されています。）"
         self.phase = PHASES["S"]
-        return ((None, ret_mes),)
+        return OnMessageResponse([(None, ret_mes)])
     
-    def set_title(self, content: str, author: discord.Member) -> tuple:
+    def set_title(self, content: str, author: discord.Member) -> OnMessageResponse:
         ret = []
         ret_mes = f"{ICONS_T['MAIN']} タイトルの変更を受け付けました！"
         all_set = False
@@ -212,12 +212,12 @@ class TABController(GameController):
             self.title_all_set_notified = True
             ret.append((None, ret_mes))
         
-        return ret
+        return OnMessageResponse(ret)
     
-    def start_script(self, _, author: discord.Member) -> tuple:
+    def start_script(self, _, author: discord.Member) -> OnMessageResponse:
         if not self.playermaster.titles_are_set():
             ret_mes = f"{ICONS_T['CAUT']} 参加者全員のタイトルの設定が完了していません！"
-            return ((author.name, ret_mes),)
+            return OnMessageResponse([(author.name, ret_mes)])
         else:
             ret = []
             # 共有情報
@@ -237,9 +237,9 @@ class TABController(GameController):
                         + f"それでは、あなたの本「{p.get_book_title()}」の記念すべき1ページ目を書き込んでください。"
                 ret.append((p.get_name(), ret_mes))
             
-            return ret
+            return OnMessageResponse(ret)
     
-    def set_script(self, content: str, author: discord.Member) -> tuple:
+    def set_script(self, content: str, author: discord.Member) -> OnMessageResponse:
         ret = []
         ret_mes = f"{ICONS_T['MAIN']} {self.script_page + 1}ページ目の変更を受け付けました！" \
                 + f"送信されたページの文字数は{len(content)}文字です。"
@@ -256,12 +256,12 @@ class TABController(GameController):
             self.script_all_set_notified = True
             ret.append((None, ret_mes))
         
-        return ret
+        return OnMessageResponse(ret)
     
-    def next_turn(self, _, author: discord.Member) -> tuple:
+    def next_turn(self, _, author: discord.Member) -> OnMessageResponse:
         if not self.playermaster.latest_scripts_are_set():
             ret_mes = f"{ICONS_T['CAUT']} 参加者全員の{self.script_page + 1}ページ目の本文の設定が完了していません！"
-            return ((author.name, ret_mes),)
+            return OnMessageResponse([(author.name, ret_mes)])
         elif self.script_page == self.cycles * self.playermaster.len_players() - 1:
             # 最終ページが終了した場合
             ret = []
@@ -280,7 +280,7 @@ class TABController(GameController):
             self.phase = PHASES["S"]
             ret.append((None, ret_mes))
 
-            return ret
+            return OnMessageResponse(ret)
         else:
             # 共有情報
             ret = []
@@ -303,4 +303,4 @@ class TABController(GameController):
                         + "```"
                 ret.append((p.get_name(), ret_mes))
             
-            return ret
+            return OnMessageResponse(ret)

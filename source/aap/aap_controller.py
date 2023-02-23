@@ -5,7 +5,7 @@ import discord
 import mojimoji
 
 from source.command import Command
-from source.game_controller import GameController, COMMANDS_B, ALWAYS_ALLOWED_COMMANDS_B
+from source.game_controller import GameController, OnMessageResponse, COMMANDS_B, ALWAYS_ALLOWED_COMMANDS_B
 from source.aap.player import PlayerMaster, UnknownPlayerError
 
 DEFAULT_PATTERN = [5, 7, 5]
@@ -108,7 +108,7 @@ class AAPController(GameController):
 
         print("initialization ok")
         
-    def help(self, _, author: discord.Member) -> tuple:
+    def help(self, _, author: discord.Member) -> OnMessageResponse:
         help_str = "\n".join([
             f"{com.get_command()}: {com.get_help()}"\
                                     for com in self.commands_dictionary.values()
@@ -117,32 +117,32 @@ class AAPController(GameController):
                 + "```\n" \
                 + help_str + "\n" \
                 + "```"
-        return ((author.name, ret_mes),)
+        return OnMessageResponse([(author.name, ret_mes)])
     
-    def show_players(self, _, author: discord.Member) -> tuple:
+    def show_players(self, _, author: discord.Member) -> OnMessageResponse:
         ret_mes = "```\n" \
                 + "ID: 名前\n" \
                 + "==========\n" \
                 + self.playermaster.display_players() + "\n" \
                 + "```"
-        return ((author.name, ret_mes),)
+        return OnMessageResponse([(author.name, ret_mes)])
     
-    def join(self, _, author: discord.Member) -> tuple:
+    def join(self, _, author: discord.Member) -> OnMessageResponse:
         if self.playermaster.add_player(author.name):
             ret_mes = f"{ICONS_A['MAIN']} {author.name}の参加を承りました。"
-            return ((None, ret_mes),)
+            return OnMessageResponse([(None, ret_mes)])
     
-    def leave(self, _, author: discord.Member) -> tuple:
+    def leave(self, _, author: discord.Member) -> OnMessageResponse:
         if self.playermaster.remove_player(author.name):
             ret_mes = f"{ICONS_A['MAIN']} {author.name}の参加を取り消しました。"
-            return ((None, ret_mes),)
+            return OnMessageResponse([(None, ret_mes)])
     
-    def reset_players(self, *_) -> tuple:
+    def reset_players(self, *_) -> OnMessageResponse:
         ret_mes = f"{ICONS_A['MAIN']} 参加メンバーをリセットしました。"
         self.playermaster.remove_all()
-        return ((None, ret_mes),)
+        return OnMessageResponse([(None, ret_mes)])
     
-    def set_pattern(self, content: str, author: discord.Member) -> tuple:
+    def set_pattern(self, content: str, author: discord.Member) -> OnMessageResponse:
         ok = True
         pattern_items = content.split(",")
         pattern = []
@@ -159,9 +159,9 @@ class AAPController(GameController):
         else:
             ret_mes = f"{ICONS_A['CAUT']} 与えられた文字が数字として解釈できません。"
             ret_mem = author.name
-        return ((ret_mem, ret_mes),)
+        return OnMessageResponse([(ret_mem, ret_mes)])
 
-    def start_game(self, *_) -> tuple:
+    def start_game(self, *_) -> OnMessageResponse:
         ret = []
         # 共有情報
         ret_mes = f"{ICONS_A['MAIN']} **ゲームを開始します！**\n" \
@@ -181,22 +181,22 @@ class AAPController(GameController):
         for p in self.playermaster.get_players():
             ret.append((p.get_name(), ret_mes))
         
-        return ret
+        return OnMessageResponse(ret)
     
-    def quit_game(self, *_) -> tuple:
+    def quit_game(self, *_) -> OnMessageResponse:
         ret_mes = f"{ICONS_A['MAIN']} ゲームが強制終了されました。\n" \
                 + "（参加メンバーは保存されています。）"
         self.phase = PHASES["S"]
-        return ((None, ret_mes),)
+        return OnMessageResponse([(None, ret_mes)])
     
-    def set_letter(self, content: str, author: discord.Member) -> tuple:
+    def set_letter(self, content: str, author: discord.Member) -> OnMessageResponse:
         ret = []
         if len(content) > 1:
             ret_mes = f"{ICONS_A['CAUT']} 送信できるのは1文字までです！"
-            return ((author.name, ret_mes),)
+            return OnMessageResponse([(author.name, ret_mes)])
         elif not content in ALLOWED_LETTERS:
             ret_mes = f"{ICONS_A['CAUT']} 無効な文字です！"
-            return ((author.name, ret_mes),)
+            return OnMessageResponse([(author.name, ret_mes)])
         letter = mojimoji.han_to_zen(content)
         if letter == "ー":
             letter = "｜"
@@ -242,4 +242,4 @@ class AAPController(GameController):
                             + "```"
                     ret.append((p.get_name(), ret_mes))
         
-        return ret
+        return OnMessageResponse(ret)
