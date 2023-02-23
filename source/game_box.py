@@ -13,6 +13,7 @@ class GameBox(discord.Client):
     gamech_id: int
     gc: GameController
     edit_target_message: Union[discord.Message, None]
+    ntn_lo_path: Union[str, None]
 
     async def on_ready(self) -> None:
         print("------------")
@@ -42,7 +43,7 @@ class GameBox(discord.Client):
                 self.gc = AAPController()
             elif on_message_res.switch_game == 3:
                 # ntn
-                self.gc = NTNController()
+                self.gc = NTNController(self.ntn_lo_path)
             self.gc.initialize(self.get_all_members, self.gamech_id)
     
     async def send_message(
@@ -70,3 +71,6 @@ class GameBox(discord.Client):
     
     def load_channel(self, id: int) -> None:
         self.gamech_id = id
+    
+    def set_ntn_lo(self, path: Union[str, None]) -> None:
+        self.ntn_lo_path = path

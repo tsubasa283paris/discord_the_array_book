@@ -19,17 +19,16 @@ class Script:
     _layout: Union[str, None]
     _id_word_map: Union[Dict[int, Union[str, None]], None]
 
-    def __init__(self) -> None:
-        self._load_layout_dict()
+    def __init__(self, lo_path: Union[str, None]) -> None:
+        self._load_layout_dict(lo_path)
         self.num_blank = None
         self._blank_pattern = None
         self._layout = None
         self._id_word_map = None
     
-    def _load_layout_dict(self) -> None:
-        lo_path = DEFAULT_SCRIPT_LAYOUT
-        if os.environ.get("NTN_LO") is not None:
-            lo_path = os.environ["NTN_LO"]
+    def _load_layout_dict(self, lo_path: Union[str, None]) -> None:
+        if lo_path is None:
+            lo_path = DEFAULT_SCRIPT_LAYOUT
         
         self._lo_list: List[dict] = json.loads(lo_path)["layout_list"]
         self.num_layout = len(self._lo_list)

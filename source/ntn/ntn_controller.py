@@ -64,9 +64,12 @@ class NTNController(GameController):
     playermaster: PlayerMaster
     next_open_id: int
 
+    def __init__(self, lo_path: Union[str, None]) -> None:
+        super().__init__()
+        self.script = Script(lo_path)
+
     def initialize(self, _, gamech_id: int):
         self.gamech_id = gamech_id
-        self.script = Script()
         self.playermaster = PlayerMaster()
 
         self.commands_dictionary = COMMANDS_N
