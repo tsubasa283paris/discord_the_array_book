@@ -60,6 +60,7 @@ class NTNController(GameController):
     function_dictionary: Dict[str, Callable]
     gamech_id: int
     phase: str
+    members: List[discord.Member]
     script: Script
     playermaster: PlayerMaster
     next_open_id: int
@@ -70,6 +71,7 @@ class NTNController(GameController):
 
     def initialize(self, _, gamech_id: int):
         self.gamech_id = gamech_id
+        self.members = [member for member in self.get_all_members()]
         self.playermaster = PlayerMaster()
 
         self.commands_dictionary = COMMANDS_N
