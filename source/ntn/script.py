@@ -43,6 +43,7 @@ class Script:
         self._blank_pattern = lo["blank_pattern"]
         self._layout = lo["layout"]
 
+        self._id_word_map = {}
         for i in range(self.num_blank):
             self._id_word_map[i] = None
     
@@ -60,7 +61,7 @@ class Script:
         disp_script: str = self._layout
         for i in range(self.num_blank):
             disp_script = disp_script.replace(
-                self._blank_pattern.replace("N", str(i)),
+                self._blank_pattern.replace("N", str(i + 1)),
                 f"[ {i + 1} ]",
             )
         return disp_script
@@ -70,9 +71,14 @@ class Script:
         for i in open_ids:
             if self._id_word_map[i] is not None:
                 disp_script = disp_script.replace(
-                    self._blank_pattern.replace("N", str(i)),
-                    f"[ {i + 1} ]",
+                    self._blank_pattern.replace("N", str(i + 1)),
+                    f"[ {self._id_word_map[i]} ]",
                 )
+        for i in range(self.num_blank):
+            disp_script = disp_script.replace(
+                self._blank_pattern.replace("N", str(i + 1)),
+                f"[ {i + 1} ]",
+            )
         return disp_script
     
     def fill_blank(self, i: int, word: str) -> None:
@@ -85,4 +91,4 @@ class Script:
         return self._id_word_map[i] is not None
     
     def all_filled(self) -> bool:
-        return all(self._id_word_map[i] is not None for i in range(len(self.num_blank)))
+        return all(self._id_word_map[i] is not None for i in range(self.num_blank))

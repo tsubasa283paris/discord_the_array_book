@@ -29,7 +29,7 @@ class GameBox(discord.Client):
         if on_message_res.edit:
             if self.edit_target_message is not None:
                 await self.edit_target_message.edit(
-                    on_message_res.message_list[0][1]
+                    content=on_message_res.message_list[0][1]
                 )
         else:
             for i, msg in enumerate(on_message_res.message_list):
@@ -67,7 +67,7 @@ class GameBox(discord.Client):
                     break
         if register_editable:
             self.edit_target_message = \
-                (await channel.history(limit=1).flatten())[0]
+                [message async for message in channel.history(limit=1)][0]
     
     def load_channel(self, id: int) -> None:
         self.gamech_id = id

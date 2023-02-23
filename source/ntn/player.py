@@ -70,7 +70,7 @@ class PlayerMaster:
         return len(self._player_list)
 
     def setup(self, num_blanks: int) -> None:
-        rand_indexes = list(range(len(num_blanks)))
+        rand_indexes = list(range(num_blanks))
         random.shuffle(rand_indexes)
         for i in range(num_blanks):
             self._player_list[i % len(self._player_list)]\

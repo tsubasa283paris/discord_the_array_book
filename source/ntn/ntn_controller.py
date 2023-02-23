@@ -65,6 +65,8 @@ class NTNController(GameController):
     playermaster: PlayerMaster
     next_open_id: int
 
+    blank_all_filled_notified: bool
+
     def __init__(self, lo_path: Union[str, None]) -> None:
         super().__init__()
         self.script = Script(lo_path)
@@ -139,7 +141,7 @@ class NTNController(GameController):
     def start_game(self, args_str: str, author: discord.Member) -> OnMessageResponse:
         script_id: Union[int, None] = None
         tmp = args_str.split(" ")
-        if len(tmp) > 0:
+        if tmp[0] != "":
             try:
                 script_id = int(tmp[0])
             except:
@@ -177,17 +179,21 @@ class NTNController(GameController):
                 + "```"
         self.playermaster.setup(self.script.num_blank)
         self.phase = PHASES["F"]
+        self.blank_all_filled_notified = False
         self.next_open_id = 0
         ret.append((None, ret_mes))
 
         # 全員へ操作方法の通知
         cmd = self.commands_dictionary["FILL"].get_command()
         for p in self.playermaster.get_players():
-            valid_ids = p.get_valid_ids()
+            valid_ids_str = list(map(
+                lambda x: str(x + 1),
+                sorted(p.get_valid_ids())
+            ))
             ret_mes = f"{ICONS_N['MAIN']} `{cmd}` のあとに番号と言葉を半角スペースを空けて打ち込み、空欄を埋めてください。\n" \
                     + "（言葉に半角スペースを含む場合はアンダーバー `_` を代わりにお入れください。）\n" \
                     + "ゲームマスターが読み上げフェーズに移行するまでは何度でも上書きできます。\n" \
-                    + "あなたが担当する番号は **" + "** と **".join(map(str, valid_ids)) + "** です。\n\n" \
+                    + "あなたが担当する番号は **" + "** と **".join(valid_ids_str) + "** です。\n\n" \
                     + "原稿はこちらです。\n" \
                     + "```\n" \
                     + f"{self.script.show_script_blank()}\n" \
@@ -254,9 +260,10 @@ class NTNController(GameController):
                 + "```"
         ret.append((author.name, ret_mes))
 
-        if self.script.all_filled():
+        if self.script.all_filled() and not self.blank_all_filled_notified:
             # 全員が空欄を埋めた段階で通知
             ret_mes = f"{ICONS_N['MAIN']} すべての空欄の記入が終わりました！"
+            self.blank_all_filled_notified = True
             ret.append((None, ret_mes))
             
         return OnMessageResponse(ret)
@@ -282,7 +289,7 @@ class NTNController(GameController):
         return OnMessageResponse(ret, register_editable=1)
     
     def open(self, *_) -> OnMessageResponse:
-        open_ids = list(range(len(self.next_open_id + 1)))
+        open_ids = list(range(self.next_open_id + 1))
         self.next_open_id += 1
 
         if self.next_open_id == self.script.num_blank:
