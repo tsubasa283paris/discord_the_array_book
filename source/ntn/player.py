@@ -80,8 +80,8 @@ class PlayerMaster:
         random.shuffle(rand_indexes)
         for i in range(len(self._player_list)):
             self._player_list[i].reset_ids()
-        for i in rand_indexes:
-            self._player_list[i % len(self._player_list)]\
-                .add_valid_id(rand_indexes.pop())
+        for i, ri in enumerate(rand_indexes):
+            self._player_list[ri % len(self._player_list)]\
+                .add_valid_id(i)
         for i in range(len(self._player_list)):
             self._player_list[i].sort_valid_id()
