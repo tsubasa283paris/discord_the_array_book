@@ -24,6 +24,9 @@ class Player:
     def add_valid_id(self, id: int) -> None:
         self._valid_ids.append(id)
     
+    def sort_valid_id(self) -> None:
+        self._valid_ids = sorted(self._valid_ids)
+    
     def get_valid_ids(self) -> List[int]:
         return self._valid_ids
 
@@ -77,6 +80,8 @@ class PlayerMaster:
         random.shuffle(rand_indexes)
         for i in range(len(self._player_list)):
             self._player_list[i].reset_ids()
-        for i in range(num_blanks):
+        for i in rand_indexes:
             self._player_list[i % len(self._player_list)]\
                 .add_valid_id(rand_indexes.pop())
+        for i in range(len(self._player_list)):
+            self._player_list[i].sort_valid_id()
