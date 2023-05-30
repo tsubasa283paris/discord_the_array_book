@@ -14,9 +14,11 @@ gamebox = GameBox(intents=intents)
 
 token = settings.TOKEN
 channelID = settings.CHID
+ntn_layout = settings.NTN_LO
 
 if token == "" or channelID == "":
     raise ValueError(".env not set properly")
 
 gamebox.load_channel(int(channelID))
+gamebox.set_ntn_lo(ntn_layout)
 gamebox.run(token)

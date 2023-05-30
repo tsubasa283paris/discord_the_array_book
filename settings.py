@@ -10,3 +10,4 @@ load_dotenv(dotenv_path)
 
 TOKEN = os.environ.get("DISCO_TOKEN")
 CHID = os.environ.get("DISCO_CHID")
+NTN_LO = os.environ.get("NTN_LO")
