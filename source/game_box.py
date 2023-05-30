@@ -8,12 +8,14 @@ from source.game_controller import GameController
 from source.tab.tab_controller import TABController
 from source.aap.aap_controller import AAPController
 from source.ntn.ntn_controller import NTNController
+from source.bfs.bfs_controller import BFSController
 
 class GameBox(discord.Client):
     gamech_id: int
     gc: GameController
     edit_target_message: Union[discord.Message, None]
     ntn_lo_path: Union[str, None]
+    bfs_th_path: Union[str, None]
 
     async def on_ready(self) -> None:
         print("------------")
@@ -44,6 +46,9 @@ class GameBox(discord.Client):
             elif on_message_res.switch_game == 3:
                 # ntn
                 self.gc = NTNController(self.ntn_lo_path)
+            elif on_message_res.switch_game == 4:
+                # bfs
+                self.gc = BFSController(self.bfs_th_path)
             self.gc.initialize(self.get_all_members, self.gamech_id)
     
     async def send_message(
@@ -74,3 +79,6 @@ class GameBox(discord.Client):
     
     def set_ntn_lo(self, path: Union[str, None]) -> None:
         self.ntn_lo_path = path
+
+    def set_bfs_th(self, path: Union[str, None]) -> None:
+        self.bfs_th_path = path

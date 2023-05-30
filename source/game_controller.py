@@ -110,6 +110,11 @@ class GameController:
             ret_mes = "__**NTN**__\n" \
                     + "各プレイヤーがニュース原稿の空欄を埋め、一人が読み上げるゲームです。\n" \
                     + "設定によりますが、多くの場合1ゲームは15分ほどで終わります。"
+        elif temp == 4:
+            # bfs
+            ret_mes = "__**BFS**__\n" \
+                    + "回答者にとって最も〇〇な回答をしたプレイヤーに得点が入っていくゲームです。\n" \
+                    + "設定によりますが、多くの場合1ゲームは15分ほどで終わります。"
         return OnMessageResponse([(author.name, ret_mes)])
     
     def launch_game(self, content: str, author: discord.Member) -> OnMessageResponse:
@@ -141,6 +146,12 @@ class GameController:
             ret_mem = None
             switch_id = 3
             ret_mes = f"{ICONS_B['MAIN']} ゲームをNTNに設定しました。\n" \
+                    + "これまで進行していたゲームは破棄されます。"
+        elif temp == 4:
+            # ntn
+            ret_mem = None
+            switch_id = 4
+            ret_mes = f"{ICONS_B['MAIN']} ゲームをBFSに設定しました。\n" \
                     + "これまで進行していたゲームは破棄されます。"
         return OnMessageResponse([(ret_mem, ret_mes)], switch_id)
     
