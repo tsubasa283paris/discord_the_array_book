@@ -10,6 +10,7 @@ intents = discord.Intents.default()
 intents.members = True
 intents.typing = False
 intents.presences = False
+intents.message_content = True
 gamebox = GameBox(intents=intents)
 
 token = settings.TOKEN
